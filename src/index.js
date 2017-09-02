@@ -34,7 +34,7 @@ const plugin = ({ term, display, actions, settings }) => {
  */
 const searchBookmarks = debounce((term, settings, display, actions) => {
 
-  bookmarks.search('Profile 1', term).then((bookmarksList) => {
+  bookmarks.search(settings.profileName, term).then((bookmarksList) => {
     let results = [];
     bookmarksList.forEach((item) => {
       results.push({

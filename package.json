@@ -1,7 +1,7 @@
 {
   "name": "cerebro-chrome-bookmarks",
   "description": "Cerebro plugin that provides easy access to your Chrome bookmarks",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": {
     "name": "Bruno Paz",
     "email": "brunopaz@sapo.pt",

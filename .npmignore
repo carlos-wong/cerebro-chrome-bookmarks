@@ -1,5 +1,7 @@
 src
 node_modules
+demo.gif
 screenshot.png
 yarn.lock
 .history
+.eidtorconfig

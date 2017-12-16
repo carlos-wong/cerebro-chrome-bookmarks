@@ -14,9 +14,6 @@ A list of bookamrks matching your search will be displayed. Clicking on it, will
 
 You need to define the name of your "Chrome Profile", in the plugin settings section on Cerebro. By default it will use the "Default" profile.
 
-**Note** Plugin settings is broken on the current Cerebro version. If you dont use the "Default" profile, You can try the "master" branch or edit the plugin code directly to use your profile.
-
-
 ## Related
 
 * [Cerebro](http://github.com/KELiON/cerebro) – Plugin extracted from core Cerebro app;

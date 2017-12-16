@@ -1,33 +1,13 @@
-'use strict';
-
 const debounce = require('debounce');
 const icon = require('../assets/icon.png');
 const bookmarks = require('./bookmarks');
-const PLUGIN_REGEX = /chrome\s(.*)/;
 
 /**
  * Plugin main entry point
  */
 const plugin = ({ term, display, actions, settings }) => {
-
-  let pluginSettings = settings || {};
- 
-  const match = term.match(PLUGIN_REGEX);
-
-  if (match) {
-
-    let term = match[1].trim();
-    if (term.length == 0) {
-      display({
-        title: 'Keep typing for searching thourgh your Chrome Bookmarks',
-        icon: icon
-      })
-      return;
-    }
-
-    searchBookmarks(term, pluginSettings, display, actions);
-  }
-}
+  searchBookmarks(term, settings, display, actions);
+};
 
 /**
  * Search bookmarks
@@ -39,6 +19,7 @@ const searchBookmarks = debounce((term, settings, display, actions) => {
     bookmarksList.forEach((item) => {
       results.push({
         title: item.title,
+        subtitle: item.folder,
         icon: icon,
         onSelect: (evemt) => {
           actions.open(item.url);
@@ -46,19 +27,11 @@ const searchBookmarks = debounce((term, settings, display, actions) => {
       })
     });
 
-    if (results.length == 0) {
-      display({
-        title: `No bookmarks found matching ${term}`,
-        icon: icon
-      });
-    } else {
+    if (results.length > 0) {
       display(results);
-    }
+    } 
   }).catch((err) => {
-    display({
-      title: 'Error fetching bookmarks',
-      icon: icon
-    });
+    console.err(err);
   });
 
 }, 300);
@@ -66,7 +39,6 @@ const searchBookmarks = debounce((term, settings, display, actions) => {
 module.exports = {
   fn: plugin,
   name: 'Chrome Bookmarks',
-  keyword: 'chrome',
   icon,
   settings: {
     profileName: { type: 'string' },

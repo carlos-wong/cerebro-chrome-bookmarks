@@ -1,4 +1,3 @@
-'use strict';
 
 /**
  * Main bookmarks manager file.

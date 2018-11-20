@@ -9,6 +9,7 @@ const os = require('os');
 const path = require('path');
 const utils = require('./utils');
 const { memoize } = require('cerebro-tools');
+var _ = require('lodash');
 
 /**
  * The name of default Google Chrome profile.
@@ -33,27 +34,45 @@ const MEMOIZE_BOOKARMS_SEARCH_OPTS = {
     preFetch: true
 }
 
+function curFilter(source_list,keywords,callback){
+  if(keywords.length <=0 ){
+    callback(source_list);
+  }else{
+    var keyworkd = keywords[0];
+    curFilter(_.filter(source_list,(o)=>{return _.includes(o.title.toLowerCase(),keyworkd);}),_.slice(keywords,1),callback);
+  }
+}
+
 /**
  * @param {string} profile The Google Chrome profile name to search
  * @param {string} term The search term
  * @return {array} List of bookmarks that match the specified criteria
  */
 const search = memoize((profile, term) => new Promise((resolve, reject) => {  
-    let profileName = profile || BOOKMARKS_DEFAULT_PROFILE;
-    let bookmarksFile = getBookmarksFilePath(process.platform, profileName);
-    
-    parseBookmarks(bookmarksFile).then((b) => {
-        let filteredBookmarks = b.filter((item => {
-            return item.title.toLowerCase().includes(term.toLowerCase());
-        }));
+  let profileName = profile || BOOKMARKS_DEFAULT_PROFILE;
+  let bookmarksFile = getBookmarksFilePath(process.platform, profileName);
+  
+  parseBookmarks(bookmarksFile).then((b) => {
+    let termKeywords = term.split(' ');
+    let filteredBookmarks = [];
+    if(termKeywords.length > 0){
+      // filteredBookmarks = b.filter((item => {
+      //   return item.title.toLowerCase().includes(term.toLowerCase());
+      // }));
+      curFilter(b,termKeywords,(list)=>{
+        console.log('dump filter list is:',list);
+        resolve(list);
+      });
+    }
+    else{
+      resolve(filteredBookmarks);
+    }
 
-        resolve(filteredBookmarks);
-
-    }).catch((err) => {
-        console.log(err);
-        reject(err);
-    });
-    
+  }).catch((err) => {
+    console.log(err);
+    reject(err);
+  });
+  
 }), MEMOIZE_BOOKARMS_SEARCH_OPTS );
 
 /**
